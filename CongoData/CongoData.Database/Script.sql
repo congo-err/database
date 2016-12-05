@@ -115,6 +115,10 @@ ALTER TABLE [People].[Customer]
     ADD CONSTRAINT [fk_Customer_AddressID] FOREIGN KEY ([AddressID]) REFERENCES [Order].[Address] ([AddressID]);
 
 GO
+ALTER TABLE [Product].[Product]
+    ADD CONSTRAINT [fk_Product_CategoryID] FOREIGN KEY ([CategoryID]) REFERENCES [Product].[Category] ([CategoryID]);
+
+GO
 ALTER TABLE [Order].[Order]
     ADD CONSTRAINT [fk_Order_CustomerID] FOREIGN KEY ([CustomerID]) REFERENCES [People].[Customer] ([CustomerID]);
 
