@@ -7,6 +7,8 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "CongoData.Database", "Congo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CongoData.DataAccess", "CongoData.DataAccess\CongoData.DataAccess.csproj", "{3B83931C-3369-42CB-B764-A100491EFC35}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CongoData.Client", "CongoData.Client\CongoData.Client.csproj", "{E8E786A0-F966-496E-8031-28A9DDC4ACCF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{3B83931C-3369-42CB-B764-A100491EFC35}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B83931C-3369-42CB-B764-A100491EFC35}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B83931C-3369-42CB-B764-A100491EFC35}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8E786A0-F966-496E-8031-28A9DDC4ACCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8E786A0-F966-496E-8031-28A9DDC4ACCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8E786A0-F966-496E-8031-28A9DDC4ACCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8E786A0-F966-496E-8031-28A9DDC4ACCF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

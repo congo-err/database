@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\ICongoRepository.cs" />
     <Compile Include="Account.cs">
       <DependentUpon>CongoModel.tt</DependentUpon>
     </Compile>
@@ -63,6 +64,7 @@
     <Compile Include="Category.cs">
       <DependentUpon>CongoModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Concrete\EfCongoRepository.cs" />
     <Compile Include="CongoModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -96,7 +98,6 @@
     </EntityDeploy>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.Config" />
     <None Include="CongoModel.edmx.diagram">
       <DependentUpon>CongoModel.edmx</DependentUpon>
     </None>
