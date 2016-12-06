@@ -19,6 +19,12 @@ namespace CongoData.Client
             json.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
 
             config.Routes.MapHttpRoute(
+                name: "",
+                routeTemplate: "account/try-login",
+                defaults: new { Controller = "Account", Action = "TryLogin" }
+            );
+
+            config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }

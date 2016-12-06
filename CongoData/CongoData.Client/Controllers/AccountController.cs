@@ -42,5 +42,35 @@ namespace CongoData.Client.Controllers
 
             return Request.CreateResponse(HttpStatusCode.OK, Mappers.Map(account), MediaTypes.Json);
         }
+
+        /// <summary>
+        /// Try to login a user.
+        /// </summary>
+        /// <param name="username">The username of the user.</param>
+        /// <param name="password">The password of the user.</param>
+        /// <returns>If successful, the Account object. Otherwise, a message and boolean that contains the results of the login.</returns>
+        [HttpPost]
+        public HttpResponseMessage TryLogin([FromBody] Models.UsernamePasswordPair pair) {
+            Account account = repository.GetAccountByUsername(pair.Username);
+
+            if (account == null) {
+                return Request.CreateResponse(HttpStatusCode.OK, new {
+                    Success = false,
+                    Message = "No user with username " + pair.Username + " was found."
+                }, MediaTypes.Json);
+            }
+
+            if (account.Password != pair.Password) {
+                return Request.CreateResponse(HttpStatusCode.OK, new {
+                    Success = false,
+                    Message = "The username/password combination was incorrect."
+                }, MediaTypes.Json);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, new {
+                Success = true,
+                Account = Mappers.Map(account)
+            }, MediaTypes.Json);
+        }
     }
 }

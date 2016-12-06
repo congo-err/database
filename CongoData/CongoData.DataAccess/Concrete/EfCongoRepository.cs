@@ -1,4 +1,5 @@
 ﻿using CongoData.DataAccess.Abstract;
+using System.Linq;
 
 namespace CongoData.DataAccess.Concrete {
     /// <summary>
@@ -30,6 +31,21 @@ namespace CongoData.DataAccess.Concrete {
         /// <returns>The Account object or null if it was not found.</returns>
         public Account GetAccount(int id) {
             Account a = data.Accounts.Find(id);
+
+            if (a != null && a.Active) {
+                return a;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get an Account by username.
+        /// </summary>
+        /// <param name="username">The username of the Account.</param>
+        /// <returns>The Account object or null if it was not found.</returns>
+        public Account GetAccountByUsername(string username) {
+            Account a = data.Accounts.FirstOrDefault(d => d.Username == username);
 
             if (a != null && a.Active) {
                 return a;

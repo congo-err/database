@@ -11,6 +11,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Script.Serialization;
 using Xunit;
 
 namespace CongoData.Tests {
@@ -29,16 +30,19 @@ namespace CongoData.Tests {
                 new Account {
                     AccountID = 1,
                     Username = "Account1",
+                    Password = "123",
                     Active = true
                 },
                 new Account {
                     AccountID = 2,
                     Username = "Account2",
+                    Password = "456",
                     Active = true
                 },
                 new Account {
                     AccountID = 3,
                     Username = "Account3",
+                    Password = "789",
                     Active = true
                 }
             };
@@ -96,6 +100,113 @@ namespace CongoData.Tests {
 
             Assert.Null(account);
             Assert.Equal(HttpStatusCode.NotFound, controller.Get(5).StatusCode);
+        }
+
+        /// <summary>
+        /// Test to make sure that we can find an Account by username.
+        /// </summary>
+        [Fact]
+        public void Test_GetAccountByUsername_Success() {
+            TestStart();
+
+            EfCongoRepository repository = new EfCongoRepository(mockDb.Object);
+            Account account = repository.GetAccountByUsername("Account2");
+
+            Assert.NotNull(account);
+            Assert.Equal(2, account.AccountID);
+        }
+
+        /// <summary>
+        /// Test to make sure null is returned if an Account with the username does not exist.
+        /// </summary>
+        [Fact]
+        public void Test_GetAccountByUsername_Failure() {
+            TestStart();
+
+            EfCongoRepository repository = new EfCongoRepository(mockDb.Object);
+            Account account = repository.GetAccountByUsername("Account5");
+
+            Assert.Null(account);
+        }
+
+        /// <summary>
+        /// Test to make sure that if the correct username and password are passed in to return true and the Account.
+        /// </summary>
+        [Fact]
+        public void Test_TryLogin_Success() {
+            TestStart();
+
+            EfCongoRepository repository = new EfCongoRepository(mockDb.Object);
+
+            AccountController controller = new AccountController(repository);
+            controller.Request = new HttpRequestMessage();
+            controller.Configuration = new HttpConfiguration();
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            TryLoginResponse response = serializer.Deserialize<TryLoginResponse>(controller.TryLogin(new Client.Models.UsernamePasswordPair {
+                Username = "Account2", Password = "456"
+            }).Content.ReadAsStringAsync().Result);
+
+            Assert.True(response.Success);
+            Assert.NotNull(response.Account);
+            Assert.Equal(2, response.Account.AccountID);
+        }
+
+        /// <summary>
+        /// Test to make sure that false and the correct message is returned if no Account with the given username is found.
+        /// </summary>
+        [Fact]
+        public void Test_TryLogin_IncorrectUsername() {
+            TestStart();
+
+            EfCongoRepository repository = new EfCongoRepository(mockDb.Object);
+
+            AccountController controller = new AccountController(repository);
+            controller.Request = new HttpRequestMessage();
+            controller.Configuration = new HttpConfiguration();
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            TryLoginResponse response = serializer.Deserialize<TryLoginResponse>(controller.TryLogin(new Client.Models.UsernamePasswordPair {
+                Username = "Account5",
+                Password = "456"
+            }).Content.ReadAsStringAsync().Result);
+
+            Assert.False(response.Success);
+            Assert.Equal("No user with username Account5 was found.", response.Message);
+            Assert.Null(response.Account);
+        }
+
+        /// <summary>
+        /// Test to make sure that false and the correct message is returned if the password does not match the Account with the given username.
+        /// </summary>
+        [Fact]
+        public void Test_TryLogin_IncorrectPassword() {
+            TestStart();
+
+            EfCongoRepository repository = new EfCongoRepository(mockDb.Object);
+
+            AccountController controller = new AccountController(repository);
+            controller.Request = new HttpRequestMessage();
+            controller.Configuration = new HttpConfiguration();
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            TryLoginResponse response = serializer.Deserialize<TryLoginResponse>(controller.TryLogin(new Client.Models.UsernamePasswordPair {
+                Username = "Account2",
+                Password = "789"
+            }).Content.ReadAsStringAsync().Result);
+
+            Assert.False(response.Success);
+            Assert.Equal("The username/password combination was incorrect.", response.Message);
+            Assert.Null(response.Account);
+        }
+
+        /// <summary>
+        /// Response object for the TryLogin POST action.
+        /// </summary>
+        private class TryLoginResponse {
+            public bool Success { get; set; }
+            public string Message { get; set; }
+            public Client.Models.Account Account { get; set; }
         }
     }
 }
