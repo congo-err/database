@@ -40,7 +40,7 @@ namespace CongoData.Client.Controllers
                 return ErrorMessage.CreateResponse(Request, HttpStatusCode.NotFound, "Account with ID " + id + " was not found.");
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK, account, MediaTypes.Json);
+            return Request.CreateResponse(HttpStatusCode.OK, Mappers.Map(account), MediaTypes.Json);
         }
     }
 }

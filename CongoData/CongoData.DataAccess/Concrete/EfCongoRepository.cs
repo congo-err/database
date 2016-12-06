@@ -29,7 +29,43 @@ namespace CongoData.DataAccess.Concrete {
         /// <param name="id">The ID of the Account.</param>
         /// <returns>The Account object or null if it was not found.</returns>
         public Account GetAccount(int id) {
-            return data.Accounts.Find(id);
+            Account a = data.Accounts.Find(id);
+
+            if (a != null && a.Active) {
+                return a;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get a Cart.
+        /// </summary>
+        /// <param name="id">The ID of the Cart.</param>
+        /// <returns>The Cart object or null if it was not found.</returns>
+        public Cart GetCart(int id) {
+            Cart c = data.Carts.Find(id);
+
+            if (c != null && c.Active) {
+                return c;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get a Customer.
+        /// </summary>
+        /// <param name="id">The ID of the Customer.</param>
+        /// <returns>The Customer object or null if it was not found.</returns>
+        public Customer GetCustomer(int id) {
+            Customer c = data.Customers.Find(id);
+
+            if (c != null && c.Active) {
+                return c;
+            }
+
+            return null;
         }
     }
 }

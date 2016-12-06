@@ -14,27 +14,39 @@ using System.Web.Http;
 using Xunit;
 
 namespace CongoData.Tests {
+    /// <summary>
+    /// Tests for Account models and Controller.
+    /// </summary>
     public class AccountTests {
         private List<Account> data;
         private Mock<CongoDBEntities> mockDb;
 
+        /// <summary>
+        /// Create the AccountTests object and initialize dummy data.
+        /// </summary>
         public AccountTests() {
             data = new List<Account> {
                 new Account {
                     AccountID = 1,
-                    Username = "Account1"
+                    Username = "Account1",
+                    Active = true
                 },
                 new Account {
                     AccountID = 2,
-                    Username = "Account2"
+                    Username = "Account2",
+                    Active = true
                 },
                 new Account {
                     AccountID = 3,
-                    Username = "Account3"
+                    Username = "Account3",
+                    Active = true
                 }
             };
         }
 
+        /// <summary>
+        /// Initialize the test data.
+        /// </summary>
         private void TestStart() {
             IQueryable<Account> qAccounts = data.AsQueryable();
             

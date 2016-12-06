@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Formatting;
 using System.Web.Http;
 
 namespace CongoData.Client
@@ -14,9 +15,12 @@ namespace CongoData.Client
             // Web API routes
             config.MapHttpAttributeRoutes();
 
+            JsonMediaTypeFormatter json = config.Formatters.JsonFormatter;
+            json.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
+
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
+                routeTemplate: "{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
         }
