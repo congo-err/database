@@ -6,5 +6,6 @@ using System.Threading.Tasks;
 
 namespace CongoData.DataAccess.Abstract {
     public interface ICongoRepository {
+        Account GetAccount(int id);
     }
 }
