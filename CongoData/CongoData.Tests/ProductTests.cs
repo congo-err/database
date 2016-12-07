@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -85,6 +86,43 @@ namespace CongoData.Tests {
             Assert.Equal(2, response.Count);
             Assert.Equal("Product1", response[0].Name);
             Assert.Equal("Product3", response[1].Name);
+        }
+
+        /// <summary>
+        /// Test to make sure that the repository successfully returns an Product object if it exists.
+        /// </summary>
+        [Fact]
+        public void Test_GetProduct_Success() {
+            TestStart();
+
+            EfCongoRepository repository = new EfCongoRepository(mockDb.Object);
+            Product product = repository.GetProduct(3);
+
+            ProductController controller = new ProductController(repository);
+            controller.Request = new HttpRequestMessage();
+            controller.Configuration = new HttpConfiguration();
+
+            Assert.NotNull(product);
+            Assert.Equal(3, product.ProductID);
+            Assert.Equal(HttpStatusCode.OK, controller.Get(3).StatusCode);
+        }
+
+        /// <summary>
+        /// Test to make sure that the repository successfully returns null if it doesn't exist.
+        /// </summary>
+        [Fact]
+        public void Test_GetProduct_Failure() {
+            TestStart();
+
+            EfCongoRepository repository = new EfCongoRepository(mockDb.Object);
+            Product product = repository.GetProduct(2);
+
+            ProductController controller = new ProductController(repository);
+            controller.Request = new HttpRequestMessage();
+            controller.Configuration = new HttpConfiguration();
+
+            Assert.Null(product);
+            Assert.Equal(HttpStatusCode.NotFound, controller.Get(2).StatusCode);
         }
     }
 }
