@@ -104,5 +104,27 @@ namespace CongoData.Tests {
             Assert.Equal(1, response[0].OrderID);
             Assert.Equal(3, response[1].OrderID);
         }
+
+        /// <summary>
+        /// Make sure that all of the Orders can be list.
+        /// </summary>
+        [Fact]
+        public void Test_ListOrders() {
+            TestStart();
+
+            EfCongoRepository repository = new EfCongoRepository(mockDb.Object);
+
+            OrderController controller = new OrderController(repository);
+            controller.Request = new HttpRequestMessage();
+            controller.Configuration = new HttpConfiguration();
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            List<Client.Models.Order> response = serializer.Deserialize<List<Client.Models.Order>>(controller.List().Content.ReadAsStringAsync().Result);
+
+            Assert.Equal(3, response.ToList().Count);
+            Assert.Equal(1, response[0].OrderID);
+            Assert.Equal(2, response[1].OrderID);
+            Assert.Equal(3, response[2].OrderID);
+        }
     }
 }

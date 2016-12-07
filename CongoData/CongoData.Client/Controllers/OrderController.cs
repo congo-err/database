@@ -24,6 +24,16 @@ namespace CongoData.Client.Controllers {
         }
 
         /// <summary>
+        /// Lists all of the Orders.
+        /// </summary>
+        /// <returns>A JSON object with an array of all Orders.</returns>
+        [HttpGet]
+        public HttpResponseMessage List() {
+            List<Models.Order> orders = Mappers.Map(repository.ListOrders());
+            return Request.CreateResponse(HttpStatusCode.OK, orders, MediaTypes.Json);
+        }
+
+        /// <summary>
         /// Lists all of the Orders made by a specific Customer in the database.
         /// </summary>
         /// <returns>A JSON object with an array of all Orders.</returns>

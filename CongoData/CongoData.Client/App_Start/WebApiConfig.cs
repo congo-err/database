@@ -39,7 +39,7 @@ namespace CongoData.Client
             // Orders
             config.Routes.MapHttpRoute(
                 name: "",
-                routeTemplate: "order/{id}",
+                routeTemplate: "order/list/{id}",
                 defaults: new { controller = "Order", Action = "List", id = RouteParameter.Optional }
             );
 
