@@ -42,5 +42,30 @@ namespace CongoData.Client.Controllers
 
             return Request.CreateResponse(HttpStatusCode.OK, Mappers.Map(cart, customer), MediaTypes.Json);
         }
+
+        /// <summary>
+        /// Add a Product to a Cart.
+        /// </summary>
+        /// <param name="cartProduct">The IDs of the Cart and Product.</param>
+        /// <returns>OK and success of true if the addition was successful, NotAcceptable and an erorr message otherwise.</returns>
+        [HttpPost]
+        public HttpResponseMessage Post([FromBody] Models.CartProduct cartProduct) {
+            string errorMessage = repository.AddProductToCart(cartProduct.CartID, cartProduct.ProductID);
+
+            if (errorMessage == string.Empty) {
+                return Request.CreateResponse(HttpStatusCode.OK, new Models.PostResponseBody {
+                    Success = true
+                }, MediaTypes.Json);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.NotAcceptable, new Models.PostResponseBody {
+                Success = false,
+                Message = errorMessage
+            }, MediaTypes.Json);
+        }
+
+        public object List() {
+            throw new NotImplementedException();
+        }
     }
 }

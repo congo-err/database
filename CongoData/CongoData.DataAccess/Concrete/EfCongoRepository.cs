@@ -71,6 +71,33 @@ namespace CongoData.DataAccess.Concrete {
         }
 
         /// <summary>
+        /// Add a Product to a customer's Cart.
+        /// </summary>
+        /// <param name="cartId">The ID of the customer's Cart.</param>
+        /// <param name="productId">The ID of the Product to add.</param>
+        /// <returns>Empty string if the addition was successful, an error message otherwise.</returns>
+        public string AddProductToCart(int cartId, int productId) {
+            Cart cart = GetCart(cartId);
+            Product product = GetProduct(productId);
+
+            if (cart == null) {
+                return "Cart with ID " + cartId + " was not found.";
+            }
+
+            if (product == null) {
+                return "Product with ID " + productId + " was not found.";
+            }
+
+            cart.Products.Add(product);
+
+            if (data.SaveChanges() == 0) {
+                return "Could not add product to cart.";
+            }
+
+            return string.Empty;
+        }
+
+        /// <summary>
         /// List all of the Categories.
         /// </summary>
         /// <returns>The List of Categories.</returns>
@@ -88,6 +115,21 @@ namespace CongoData.DataAccess.Concrete {
 
             if (c != null && c.Active) {
                 return c;
+            }
+
+            return null;
+        }
+        
+        /// <summary>
+        /// Get a Product.
+        /// </summary>
+        /// <param name="id">The ID of the Product.</param>
+        /// <returns>The Product object or null if it was not found.</returns>
+        public Product GetProduct(int id) {
+            Product p = data.Products.Find(id);
+
+            if (p != null && p.Active) {
+                return p;
             }
 
             return null;

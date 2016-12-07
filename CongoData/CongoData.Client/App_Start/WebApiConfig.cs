@@ -15,8 +15,12 @@ namespace CongoData.Client
             // Web API routes
             config.MapHttpAttributeRoutes();
 
+            // JSON Serializer
             JsonMediaTypeFormatter json = config.Formatters.JsonFormatter;
             json.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
+
+            // CORS
+            config.EnableCors();
 
             // Account
             config.Routes.MapHttpRoute(

@@ -12,11 +12,15 @@ namespace CongoData.DataAccess.Abstract {
 
         // Cart
         Cart GetCart(int id);
+        string AddProductToCart(int cartId, int productId);
 
         // Category
         List<Category> ListCategories();
 
         // Customer
         Customer GetCustomer(int id);
+
+        // Product
+        Product GetProduct(int id);
     }
 }

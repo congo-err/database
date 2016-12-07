@@ -6,11 +6,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace CongoData.Client.Controllers {
     /// <summary>
     /// The Controller for access to Category entities.
     /// </summary>
+    [EnableCors("http://http://ec2-34-192-6-56.compute-1.amazonaws.com", "*", "*")]
     public class CategoryController : ApiController
     {
         private readonly ICongoRepository repository;
