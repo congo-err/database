@@ -22,6 +22,9 @@ namespace CongoData.DataAccess.Abstract {
         // Customer
         Customer GetCustomer(int id);
 
+        // Order
+        List<Order> ListOrdersFromCustomer(int customerId);
+
         // Product
         Product GetProduct(int id);
         List<Product> ListProducts();

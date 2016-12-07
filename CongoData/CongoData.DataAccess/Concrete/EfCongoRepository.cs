@@ -135,6 +135,15 @@ namespace CongoData.DataAccess.Concrete {
         }
 
         /// <summary>
+        /// List all of the Orders from a Customer.
+        /// </summary>
+        /// <param name="customerId">The ID of the Customer.</param>
+        /// <returns>The List of Orders.</returns>
+        public List<Order> ListOrdersFromCustomer(int customerId) {
+            return data.Orders.Where(o => o.Active && o.CustomerID == customerId).ToList();
+        }
+
+        /// <summary>
         /// List all of the Products in a Category.
         /// </summary>
         /// <param name="categoryId">The ID of the Category.</param>

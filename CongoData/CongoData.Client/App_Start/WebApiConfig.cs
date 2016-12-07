@@ -36,6 +36,13 @@ namespace CongoData.Client
                 defaults: new { controller = "Category", Action = "List" }
             );
 
+            // Orders
+            config.Routes.MapHttpRoute(
+                name: "",
+                routeTemplate: "order/{id}",
+                defaults: new { controller = "Order", Action = "List", id = RouteParameter.Optional }
+            );
+
             // Products
             config.Routes.MapHttpRoute(
                 name: "",

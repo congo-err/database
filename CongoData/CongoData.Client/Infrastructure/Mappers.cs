@@ -143,6 +143,37 @@ namespace CongoData.Client.Infrastructure {
         }
 
         /// <summary>
+        /// Map an Order.
+        /// </summary>
+        /// <param name="order">The Entity Framework Order.</param>
+        /// <returns>The API Order model.</returns>
+        public static Models.Order Map(Order order) {
+            return new Models.Order {
+                Address = Map(order.Address),
+                Customer = Map(order.Customer),
+                OrderDate = order.CreatedDate,
+                OrderID = order.OrderID,
+                Products = Map(order.Products.ToList()),
+                StripeID = order.StripeID
+            };
+        }
+
+        /// <summary>
+        /// Map a List of Orders.
+        /// </summary>
+        /// <param name="list">The List of Entity Framework Orders.</param>
+        /// <returns>The List of API Order models.</returns>
+        public static List<Models.Order> Map(List<Order> list) {
+            List<Models.Order> outList = new List<Models.Order>();
+
+            foreach (Order item in list) {
+                outList.Add(Map(item));
+            }
+
+            return outList;
+        }
+
+        /// <summary>
         /// Map an Product.
         /// </summary>
         /// <param name="product">The Entity Framework Product.</param>
