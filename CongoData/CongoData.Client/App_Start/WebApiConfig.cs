@@ -18,12 +18,21 @@ namespace CongoData.Client
             JsonMediaTypeFormatter json = config.Formatters.JsonFormatter;
             json.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
 
+            // Account
             config.Routes.MapHttpRoute(
                 name: "",
                 routeTemplate: "account/try-login",
                 defaults: new { Controller = "Account", Action = "TryLogin" }
             );
 
+            // Categories
+            config.Routes.MapHttpRoute(
+                name: "",
+                routeTemplate: "category",
+                defaults: new { controller = "Category", Action = "List" }
+            );
+
+            // Default
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "{controller}/{id}",

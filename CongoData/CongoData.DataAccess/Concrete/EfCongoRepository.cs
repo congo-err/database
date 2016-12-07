@@ -1,4 +1,5 @@
 ﻿using CongoData.DataAccess.Abstract;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CongoData.DataAccess.Concrete {
@@ -67,6 +68,14 @@ namespace CongoData.DataAccess.Concrete {
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// List all of the Categories.
+        /// </summary>
+        /// <returns>The List of Categories.</returns>
+        public List<Category> ListCategories() {
+            return data.Categories.Where(c => c.Active).ToList();
         }
 
         /// <summary>

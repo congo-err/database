@@ -13,6 +13,9 @@ namespace CongoData.DataAccess.Abstract {
         // Cart
         Cart GetCart(int id);
 
+        // Category
+        List<Category> ListCategories();
+
         // Customer
         Customer GetCustomer(int id);
     }

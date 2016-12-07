@@ -23,6 +23,21 @@ namespace CongoData.Client.Infrastructure {
         }
 
         /// <summary>
+        /// Map a List of Accounts.
+        /// </summary>
+        /// <param name="list">The List of Entity Framework Accounts.</param>
+        /// <returns>The List of API Account models.</returns>
+        public static List<Models.Account> Map(List<Account> list) {
+            List<Models.Account> outList = new List<Models.Account>();
+
+            foreach (Account item in list) {
+                outList.Add(Map(item));
+            }
+
+            return outList;
+        }
+
+        /// <summary>
         /// Map an Address.
         /// </summary>
         /// <param name="address">The Entity Framework Address.</param>
@@ -35,6 +50,21 @@ namespace CongoData.Client.Infrastructure {
                 Street = address.Street,
                 Zip = address.Zip
             };
+        }
+
+        /// <summary>
+        /// Map a List of Addresses.
+        /// </summary>
+        /// <param name="list">The List of Entity Framework Addresses.</param>
+        /// <returns>The List of API Address models.</returns>
+        public static List<Models.Address> Map(List<Address> list) {
+            List<Models.Address> outList = new List<Models.Address>();
+
+            foreach (Address item in list) {
+                outList.Add(Map(item));
+            }
+
+            return outList;
         }
 
         /// <summary>
@@ -71,6 +101,21 @@ namespace CongoData.Client.Infrastructure {
         }
 
         /// <summary>
+        /// Map a List of Customers.
+        /// </summary>
+        /// <param name="list">The List of Entity Framework Customers.</param>
+        /// <returns>The List of API Customer models.</returns>
+        public static List<Models.Customer> Map(List<Customer> list) {
+            List<Models.Customer> outList = new List<Models.Customer>();
+
+            foreach (Customer item in list) {
+                outList.Add(Map(item));
+            }
+
+            return outList;
+        }
+
+        /// <summary>
         /// Map an Category.
         /// </summary>
         /// <param name="category">The Entity Framework Category.</param>
@@ -80,6 +125,21 @@ namespace CongoData.Client.Infrastructure {
                 CategoryID = category.CategoryID,
                 Name = category.Name
             };
+        }
+
+        /// <summary>
+        /// Map a List of Categories.
+        /// </summary>
+        /// <param name="list">The List of Entity Framework Categories.</param>
+        /// <returns>The List of API Category models.</returns>
+        public static List<Models.Category> Map(List<Category> list) {
+            List<Models.Category> outList = new List<Models.Category>();
+
+            foreach (Category item in list) {
+                outList.Add(Map(item));
+            }
+
+            return outList;
         }
 
         /// <summary>
@@ -96,6 +156,21 @@ namespace CongoData.Client.Infrastructure {
                 Price = product.Price,
                 ProductID = product.ProductID
             };
+        }
+
+        /// <summary>
+        /// Map a List of Products.
+        /// </summary>
+        /// <param name="list">The List of Entity Framework Products.</param>
+        /// <returns>The List of API Product models.</returns>
+        public static List<Models.Product> Map(List<Product> list) {
+            List<Models.Product> outList = new List<Models.Product>();
+
+            foreach (Product item in list) {
+                outList.Add(Map(item));
+            }
+
+            return outList;
         }
     }
 }
