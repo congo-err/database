@@ -34,5 +34,16 @@ namespace CongoData.Client.Controllers {
             IEnumerable<Models.Category> categories = Mappers.Map(repository.ListCategories());
             return Request.CreateResponse(HttpStatusCode.OK, categories, MediaTypes.Json);
         }
+
+        /// <summary>
+        /// Lists all of the Products in the database with a given Category.
+        /// </summary>
+        /// <param name="id">The ID of the Category.</param>
+        /// <returns>A JSON object with an array of all Products.</returns>
+        [HttpGet]
+        public HttpResponseMessage Get(int id) {
+            IEnumerable<Models.Product> products = Mappers.Map(repository.ListProductsInCategory(id));
+            return Request.CreateResponse(HttpStatusCode.OK, products, MediaTypes.Json);
+        }
     }
 }

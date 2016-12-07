@@ -17,6 +17,7 @@ namespace CongoData.DataAccess.Abstract {
 
         // Category
         List<Category> ListCategories();
+        List<Product> ListProductsInCategory(int categoryId);
 
         // Customer
         Customer GetCustomer(int id);
