@@ -28,16 +28,32 @@ namespace CongoData.Tests {
         /// Initialize the test data.
         /// </summary>
         private void TestStart() {
+            productData = new List<Product> {
+                new Product {
+                    ProductID = 1,
+                    Name = "Product1",
+                    Category = new Category(),
+                    Active = true
+                },
+                new Product {
+                    ProductID = 2,
+                    Name = "Product2",
+                    Category = new Category(),
+                    Active = true
+                },
+                new Product {
+                    ProductID = 3,
+                    Name = "Product3",
+                    Category = new Category(),
+                    Active = true
+                }
+            };
+
             data = new List<Cart> {
                 new Cart {
                     CustomerID = 1,
                     Products = new List<Product> {
-                        new Product {
-                            ProductID = 2,
-                            Name = "Product2",
-                            Category = new Category(),
-                            Active = true
-                        }
+                        productData[1]
                     },
                     Active = true
                 },
@@ -70,27 +86,6 @@ namespace CongoData.Tests {
                     CustomerID = 3,
                     Account = new Account(),
                     Address = new Address(),
-                    Active = true
-                }
-            };
-
-            productData = new List<Product> {
-                new Product {
-                    ProductID = 1,
-                    Name = "Product1",
-                    Category = new Category(),
-                    Active = true
-                },
-                new Product {
-                    ProductID = 2,
-                    Name = "Product2",
-                    Category = new Category(),
-                    Active = true
-                },
-                new Product {
-                    ProductID = 3,
-                    Name = "Product3",
-                    Category = new Category(),
                     Active = true
                 }
             };
@@ -237,6 +232,105 @@ namespace CongoData.Tests {
             Assert.False(response.Success);
             Assert.Equal("Product with ID 5 was not found.", response.Message);
             Assert.Equal(0, data[1].Products.ToList().Count);
+        }
+
+        /// <summary>
+        /// Make sure that a Product can successfully be removed to a Cart if both
+        /// the Cart and Product exist and the Product exists in the Cart.
+        /// </summary>
+        [Fact]
+        public void Test_RemoveProductFromCart_Success() {
+            TestStart();
+
+            EfCongoRepository repository = new EfCongoRepository(mockDb.Object);
+
+            CartController controller = new CartController(repository);
+            controller.Request = new HttpRequestMessage();
+            controller.Configuration = new HttpConfiguration();
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Client.Models.PostResponseBody response = serializer.Deserialize<Client.Models.PostResponseBody>(controller.Delete(new Client.Models.CartProduct {
+                CartID = 1,
+                ProductID = 2
+            }).Content.ReadAsStringAsync().Result);
+
+            Assert.True(response.Success);
+            Assert.Equal(0, data[0].Products.ToList().Count);
+        }
+
+        /// <summary>
+        /// Make sure that a Product is not removed and the correct response message
+        /// is returned if the Cart cannot be found.
+        /// </summary>
+        [Fact]
+        public void Test_RemoveProductFromCart_CartNotFound() {
+            TestStart();
+
+            EfCongoRepository repository = new EfCongoRepository(mockDb.Object);
+
+            CartController controller = new CartController(repository);
+            controller.Request = new HttpRequestMessage();
+            controller.Configuration = new HttpConfiguration();
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Client.Models.PostResponseBody response = serializer.Deserialize<Client.Models.PostResponseBody>(controller.Delete(new Client.Models.CartProduct {
+                CartID = 4,
+                ProductID = 2
+            }).Content.ReadAsStringAsync().Result);
+
+            Assert.False(response.Success);
+            Assert.Equal("Cart with ID 4 was not found.", response.Message);
+            Assert.Equal(1, data[0].Products.ToList().Count);
+        }
+
+        /// <summary>
+        /// Make sure that a Product is not removed and the correct response message
+        /// is returned if the Product cannot be found.
+        /// </summary>
+        [Fact]
+        public void Test_RemoveProductFromCart_ProductNotFound() {
+            TestStart();
+
+            EfCongoRepository repository = new EfCongoRepository(mockDb.Object);
+
+            CartController controller = new CartController(repository);
+            controller.Request = new HttpRequestMessage();
+            controller.Configuration = new HttpConfiguration();
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Client.Models.PostResponseBody response = serializer.Deserialize<Client.Models.PostResponseBody>(controller.Delete(new Client.Models.CartProduct {
+                CartID = 1,
+                ProductID = 5
+            }).Content.ReadAsStringAsync().Result);
+
+            Assert.False(response.Success);
+            Assert.Equal("Product with ID 5 was not found.", response.Message);
+            Assert.Equal(1, data[0].Products.ToList().Count);
+        }
+
+        /// <summary>
+        /// Make sure that a Product cannot be removed if it isn't in the Cart
+        /// and the proper response Message is returned.
+        /// </summary>
+        [Fact]
+        public void Test_RemoveProductFromCart_ProductNotInCart() {
+            TestStart();
+
+            EfCongoRepository repository = new EfCongoRepository(mockDb.Object);
+
+            CartController controller = new CartController(repository);
+            controller.Request = new HttpRequestMessage();
+            controller.Configuration = new HttpConfiguration();
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Client.Models.PostResponseBody response = serializer.Deserialize<Client.Models.PostResponseBody>(controller.Delete(new Client.Models.CartProduct {
+                CartID = 1,
+                ProductID = 3
+            }).Content.ReadAsStringAsync().Result);
+
+            Assert.False(response.Success);
+            Assert.Equal("Product is not in the cart.", response.Message);
+            Assert.Equal(1, data[0].Products.ToList().Count);
         }
     }
 }

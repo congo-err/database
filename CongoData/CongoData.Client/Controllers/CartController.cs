@@ -63,5 +63,26 @@ namespace CongoData.Client.Controllers
                 Message = errorMessage
             }, MediaTypes.Json);
         }
+
+        /// <summary>
+        /// Remove a Product from a Cart.
+        /// </summary>
+        /// <param name="cartProduct">The IDs of the Cart and Product.</param>
+        /// <returns>OK and success of true if the addition was successful, OK and an erorr message otherwise.</returns>
+        [HttpDelete]
+        public HttpResponseMessage Delete([FromBody] Models.CartProduct cartProduct) {
+            string errorMessage = repository.RemoveProductFromCart(cartProduct.CartID, cartProduct.ProductID);
+
+            if (errorMessage == string.Empty) {
+                return Request.CreateResponse(HttpStatusCode.OK, new Models.PostResponseBody {
+                    Success = true
+                }, MediaTypes.Json);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, new Models.PostResponseBody {
+                Success = false,
+                Message = errorMessage
+            }, MediaTypes.Json);
+        }
     }
 }

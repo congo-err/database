@@ -91,7 +91,36 @@ namespace CongoData.DataAccess.Concrete {
             cart.Products.Add(product);
 
             if (data.SaveChanges() == 0) {
-                return "Could not add product to cart.";
+                return "Product is already within the cart.";
+            }
+
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// Remove a Product from a Cart.
+        /// </summary>
+        /// <param name="cartId">The ID of the customer's Cart.</param>
+        /// <param name="productId">The ID of the Product to remove.</param>
+        /// <returns>Empty string if the removal was successful, an error message otherwise.</returns>
+        public string RemoveProductFromCart(int cartId, int productId) {
+            Cart cart = GetCart(cartId);
+            Product product = GetProduct(productId);
+
+            if (cart == null) {
+                return "Cart with ID " + cartId + " was not found.";
+            }
+            
+            if (product == null) {
+                return "Product with ID " + productId + " was not found.";
+            }
+
+            if (!cart.Products.Remove(product)) {
+                return "Product is not in the cart.";
+            }
+
+            if (data.SaveChanges() == 0) {
+                return "Unable to remove product from cart.";
             }
 
             return string.Empty;
