@@ -134,5 +134,13 @@ namespace CongoData.DataAccess.Concrete {
 
             return null;
         }
+
+        /// <summary>
+        /// List all of the Products.
+        /// </summary>
+        /// <returns></returns>
+        public List<Product> ListProducts() {
+            return data.Products.Where(p => p.Active).ToList();
+        }
     }
 }

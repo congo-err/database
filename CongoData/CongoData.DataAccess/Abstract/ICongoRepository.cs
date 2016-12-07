@@ -22,5 +22,6 @@ namespace CongoData.DataAccess.Abstract {
 
         // Product
         Product GetProduct(int id);
+        List<Product> ListProducts();
     }
 }
