@@ -47,7 +47,7 @@ namespace CongoData.Client.Controllers
         /// Add a Product to a Cart.
         /// </summary>
         /// <param name="cartProduct">The IDs of the Cart and Product.</param>
-        /// <returns>OK and success of true if the addition was successful, NotAcceptable and an erorr message otherwise.</returns>
+        /// <returns>OK and success of true if the addition was successful, OK and an erorr message otherwise.</returns>
         [HttpPost]
         public HttpResponseMessage Post([FromBody] Models.CartProduct cartProduct) {
             string errorMessage = repository.AddProductToCart(cartProduct.CartID, cartProduct.ProductID);
@@ -58,14 +58,10 @@ namespace CongoData.Client.Controllers
                 }, MediaTypes.Json);
             }
 
-            return Request.CreateResponse(HttpStatusCode.NotAcceptable, new Models.PostResponseBody {
+            return Request.CreateResponse(HttpStatusCode.OK, new Models.PostResponseBody {
                 Success = false,
                 Message = errorMessage
             }, MediaTypes.Json);
-        }
-
-        public object List() {
-            throw new NotImplementedException();
         }
     }
 }
