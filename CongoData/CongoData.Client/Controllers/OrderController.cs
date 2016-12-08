@@ -1,4 +1,5 @@
 ﻿using CongoData.Client.Infrastructure;
+using CongoData.DataAccess;
 using CongoData.DataAccess.Abstract;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,27 @@ namespace CongoData.Client.Controllers {
         public HttpResponseMessage List(int id) {
             List<Models.Order> orders = Mappers.Map(repository.ListOrdersFromCustomer(id));
             return Request.CreateResponse(HttpStatusCode.OK, orders, MediaTypes.Json);
+        }
+
+        /// <summary>
+        /// Create an Order.
+        /// </summary>
+        /// <param name="order">The IDs for the customer, address, stripe order, and products.</param>
+        /// <returns>OK and success of true if the creation was successful, OK and an erorr message otherwise.</returns>
+        [HttpPost]
+        public HttpResponseMessage Post([FromBody] Models.OrderRequest order) {
+            string errorMessage = repository.CreateOrder(order.CustomerID, order.AddressID, order.StripeID, order.ProductIDs);
+
+            if (errorMessage == string.Empty) {
+                return Request.CreateResponse(HttpStatusCode.OK, new Models.PostResponseBody {
+                    Success = true
+                }, MediaTypes.Json);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, new Models.PostResponseBody {
+                Success = false,
+                Message = errorMessage
+            }, MediaTypes.Json);
         }
     }
 }

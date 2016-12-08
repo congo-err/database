@@ -1,4 +1,5 @@
 ﻿using CongoData.DataAccess.Abstract;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -47,6 +48,21 @@ namespace CongoData.DataAccess.Concrete {
         /// <returns>The Account object or null if it was not found.</returns>
         public Account GetAccountByUsername(string username) {
             Account a = data.Accounts.FirstOrDefault(d => d.Username == username);
+
+            if (a != null && a.Active) {
+                return a;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get an Address.
+        /// </summary>
+        /// <param name="id">The ID of the Address.</param>
+        /// <returns>The Address object or null if it was not found.</returns>
+        public Address GetAddress(int id) {
+            Address a = data.Addresses.Find(id);
 
             if (a != null && a.Active) {
                 return a;
@@ -170,6 +186,51 @@ namespace CongoData.DataAccess.Concrete {
         /// <returns>The List of Orders.</returns>
         public List<Order> ListOrdersFromCustomer(int customerId) {
             return data.Orders.Where(o => o.Active && o.CustomerID == customerId).ToList();
+        }
+
+        /// <summary>
+        /// Create an Order and save it to the database.
+        /// </summary>
+        /// <param name="order">The Order object to save.</param>
+        /// <returns>Empty string if the addition was successful, and error message otherwise.</returns>
+        public string CreateOrder(int customerID, int addressID, string stripeID, List<int> productIDs) {
+            Customer customer = GetCustomer(customerID);
+            Address address = GetAddress(addressID);
+            List<Product> products = new List<Product>();
+
+            if (customer == null) {
+                return "Customer with ID " + customerID + " was not found.";
+            }
+
+            if (address == null) {
+                return "Address with ID " + addressID + " was not found.";
+            }
+
+            foreach (int productID in productIDs) {
+                Product product = GetProduct(productID);
+
+                if (product == null) {
+                    return "Product with ID " + productID + " was not found.";
+                }
+
+                products.Add(product);
+            }
+
+            data.Orders.Add(new Order {
+                Address = address,
+                Customer = customer,
+                StripeID = stripeID,
+                Products = products,
+                CreatedDate = DateTime.Now,
+                UpdatedDate = DateTime.Now,
+                Active = true
+            });
+
+            if (data.SaveChanges() == 0) {
+                return "Order could not be created.";
+            }
+
+            return string.Empty;
         }
 
         /// <summary>

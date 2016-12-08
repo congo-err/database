@@ -70,7 +70,7 @@ namespace CongoData.Client.Controllers
         /// </summary>
         /// <param name="cartID">The ID of the Cart.</param>
         /// <param name="productID">The ID of the Product.</param>
-        /// <returns>OK and success of true if the addition was successful, OK and an erorr message otherwise.</returns>
+        /// <returns>OK and success of true if the removal was successful, OK and an erorr message otherwise.</returns>
         [HttpDelete]
         public HttpResponseMessage Delete(int cartID, int productID) {
             string errorMessage = repository.RemoveProductFromCart(cartID, productID);
@@ -91,7 +91,7 @@ namespace CongoData.Client.Controllers
         /// Remove all Products from a Cart.
         /// </summary>
         /// <param name="id">The ID of the Cart.</param>
-        /// <returns></returns>
+        /// <returns>OK and success of true if the clear was successful, OK and an erorr message otherwise.</returns>
         [HttpDelete]
         public HttpResponseMessage Clear(int id) {
             string errorMessage = repository.ClearCart(id);

@@ -10,6 +10,9 @@ namespace CongoData.DataAccess.Abstract {
         Account GetAccount(int id);
         Account GetAccountByUsername(string username);
 
+        // Address
+        Address GetAddress(int id);
+
         // Cart
         Cart GetCart(int id);
         string AddProductToCart(int cartId, int productId);
@@ -26,6 +29,7 @@ namespace CongoData.DataAccess.Abstract {
         // Order
         List<Order> ListOrders();
         List<Order> ListOrdersFromCustomer(int customerId);
+        string CreateOrder(int customerID, int addressID, string stripeID, List<int> productIDs);
 
         // Product
         Product GetProduct(int id);
