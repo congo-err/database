@@ -189,10 +189,25 @@ namespace CongoData.DataAccess.Concrete {
         }
 
         /// <summary>
+        /// Get a Customer.
+        /// </summary>
+        /// <param name="id">The ID of the Customer.</param>
+        /// <returns>The Customer object or null if it was not found.</returns>
+        public Order GetOrder(int id) {
+            Order o = data.Orders.Find(id);
+
+            if (o != null && o.Active) {
+                return o;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Create an Order and save it to the database.
         /// </summary>
         /// <param name="order">The Order object to save.</param>
-        /// <returns>Empty string if the addition was successful, and error message otherwise.</returns>
+        /// <returns>String containing the new order id if the addition was successful, and error message otherwise.</returns>
         public string CreateOrder(int customerID, int addressID, string stripeID, List<int> productIDs) {
             Customer customer = GetCustomer(customerID);
             Address address = GetAddress(addressID);
@@ -230,7 +245,7 @@ namespace CongoData.DataAccess.Concrete {
                 return "Order could not be created.";
             }
 
-            return string.Empty;
+            return data.Orders.ToList().Count.ToString();
         }
 
         /// <summary>

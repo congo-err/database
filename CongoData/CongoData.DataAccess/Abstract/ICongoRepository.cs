@@ -29,6 +29,7 @@ namespace CongoData.DataAccess.Abstract {
         // Order
         List<Order> ListOrders();
         List<Order> ListOrdersFromCustomer(int customerId);
+        Order GetOrder(int id);
         string CreateOrder(int customerID, int addressID, string stripeID, List<int> productIDs);
 
         // Product

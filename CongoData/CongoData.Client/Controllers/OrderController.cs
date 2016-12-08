@@ -47,19 +47,30 @@ namespace CongoData.Client.Controllers {
         /// <summary>
         /// Create an Order.
         /// </summary>
-        /// <param name="order">The IDs for the customer, address, stripe order, and products.</param>
+        /// <param name="orderRequest">The IDs for the customer, address, stripe order, and products.</param>
         /// <returns>OK and success of true if the creation was successful, OK and an erorr message otherwise.</returns>
         [HttpPost]
-        public HttpResponseMessage Post([FromBody] Models.OrderRequest order) {
-            string errorMessage = repository.CreateOrder(order.CustomerID, order.AddressID, order.StripeID, order.ProductIDs);
-
-            if (errorMessage == string.Empty) {
-                return Request.CreateResponse(HttpStatusCode.OK, new Models.PostResponseBody {
-                    Success = true
+        public HttpResponseMessage Post([FromBody] Models.OrderRequest orderRequest) {
+            if (orderRequest == null) {
+                return Request.CreateResponse(HttpStatusCode.NotAcceptable, new Models.PostResponseBody {
+                    Success = false,
+                    Message = "Request body does not conform to the OrderRequest model."
                 }, MediaTypes.Json);
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK, new Models.PostResponseBody {
+            string errorMessage = repository.CreateOrder(orderRequest.CustomerID, orderRequest.AddressID, orderRequest.StripeID, orderRequest.ProductIDs);
+            int orderId;
+
+            if (int.TryParse(errorMessage, out orderId)) {
+                Order order = repository.GetOrder(orderId);
+
+                return Request.CreateResponse(HttpStatusCode.OK, new Models.OrderResponse {
+                    Success = true,
+                    Order = Mappers.Map(order)
+                }, MediaTypes.Json);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, new Models.OrderResponse {
                 Success = false,
                 Message = errorMessage
             }, MediaTypes.Json);
