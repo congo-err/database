@@ -29,6 +29,13 @@ namespace CongoData.Client
                 defaults: new { Controller = "Account", Action = "TryLogin" }
             );
 
+            // Carts
+            config.Routes.MapHttpRoute(
+                name: "",
+                routeTemplate: "cart/{cartID}/{productID}",
+                defaults: new { Controller = "Cart", Action = "Delete" }
+            );
+
             // Categories
             config.Routes.MapHttpRoute(
                 name: "",

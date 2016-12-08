@@ -14,6 +14,7 @@ namespace CongoData.DataAccess.Abstract {
         Cart GetCart(int id);
         string AddProductToCart(int cartId, int productId);
         string RemoveProductFromCart(int cartId, int productId);
+        string ClearCart(int id);
 
         // Category
         List<Category> ListCategories();

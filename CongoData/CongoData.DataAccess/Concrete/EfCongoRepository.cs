@@ -127,6 +127,27 @@ namespace CongoData.DataAccess.Concrete {
         }
 
         /// <summary>
+        /// Clear the Cart of all of its Products.
+        /// </summary>
+        /// <param name="cartId">The ID of the Cart.</param>
+        /// <returns>Empty string if the removal was successful, an error message otherwise.</returns>
+        public string ClearCart(int cartId) {
+            Cart cart = GetCart(cartId);
+
+            if (cart == null) {
+                return "Cart with ID " + cartId + " was not found.";
+            }
+
+            cart.Products.Clear();
+
+            if (data.SaveChanges() == 0) {
+                return "Unable to clear cart.";
+            }
+
+            return string.Empty;
+        }
+
+        /// <summary>
         /// List all of the Categories.
         /// </summary>
         /// <returns>The List of Categories.</returns>

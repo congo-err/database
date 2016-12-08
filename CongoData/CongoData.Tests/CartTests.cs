@@ -249,10 +249,7 @@ namespace CongoData.Tests {
             controller.Configuration = new HttpConfiguration();
 
             JavaScriptSerializer serializer = new JavaScriptSerializer();
-            Client.Models.PostResponseBody response = serializer.Deserialize<Client.Models.PostResponseBody>(controller.Delete(new Client.Models.CartProduct {
-                CartID = 1,
-                ProductID = 2
-            }).Content.ReadAsStringAsync().Result);
+            Client.Models.PostResponseBody response = serializer.Deserialize<Client.Models.PostResponseBody>(controller.Delete(1, 2).Content.ReadAsStringAsync().Result);
 
             Assert.True(response.Success);
             Assert.Equal(0, data[0].Products.ToList().Count);
@@ -273,10 +270,7 @@ namespace CongoData.Tests {
             controller.Configuration = new HttpConfiguration();
 
             JavaScriptSerializer serializer = new JavaScriptSerializer();
-            Client.Models.PostResponseBody response = serializer.Deserialize<Client.Models.PostResponseBody>(controller.Delete(new Client.Models.CartProduct {
-                CartID = 4,
-                ProductID = 2
-            }).Content.ReadAsStringAsync().Result);
+            Client.Models.PostResponseBody response = serializer.Deserialize<Client.Models.PostResponseBody>(controller.Delete(4, 2).Content.ReadAsStringAsync().Result);
 
             Assert.False(response.Success);
             Assert.Equal("Cart with ID 4 was not found.", response.Message);
@@ -298,10 +292,7 @@ namespace CongoData.Tests {
             controller.Configuration = new HttpConfiguration();
 
             JavaScriptSerializer serializer = new JavaScriptSerializer();
-            Client.Models.PostResponseBody response = serializer.Deserialize<Client.Models.PostResponseBody>(controller.Delete(new Client.Models.CartProduct {
-                CartID = 1,
-                ProductID = 5
-            }).Content.ReadAsStringAsync().Result);
+            Client.Models.PostResponseBody response = serializer.Deserialize<Client.Models.PostResponseBody>(controller.Delete(1, 5).Content.ReadAsStringAsync().Result);
 
             Assert.False(response.Success);
             Assert.Equal("Product with ID 5 was not found.", response.Message);
@@ -323,14 +314,52 @@ namespace CongoData.Tests {
             controller.Configuration = new HttpConfiguration();
 
             JavaScriptSerializer serializer = new JavaScriptSerializer();
-            Client.Models.PostResponseBody response = serializer.Deserialize<Client.Models.PostResponseBody>(controller.Delete(new Client.Models.CartProduct {
-                CartID = 1,
-                ProductID = 3
-            }).Content.ReadAsStringAsync().Result);
+            Client.Models.PostResponseBody response = serializer.Deserialize<Client.Models.PostResponseBody>(controller.Delete(1, 3).Content.ReadAsStringAsync().Result);
 
             Assert.False(response.Success);
             Assert.Equal("Product is not in the cart.", response.Message);
             Assert.Equal(1, data[0].Products.ToList().Count);
+        }
+
+        /// <summary>
+        /// Make sure that a Cart can be cleared if it exists.
+        /// </summary>
+        [Fact]
+        public void Test_ClearCart_Success() {
+            TestStart();
+
+            EfCongoRepository repository = new EfCongoRepository(mockDb.Object);
+
+            CartController controller = new CartController(repository);
+            controller.Request = new HttpRequestMessage();
+            controller.Configuration = new HttpConfiguration();
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Client.Models.PostResponseBody response = serializer.Deserialize<Client.Models.PostResponseBody>(controller.Clear(1).Content.ReadAsStringAsync().Result);
+
+            Assert.True(response.Success);
+            Assert.Equal(0, data[0].Products.ToList().Count);
+        }
+
+        /// <summary>
+        /// Make sure that the proper message is returned if a Cart that does
+        /// not exist is attempted to be cleared.
+        /// </summary>
+        [Fact]
+        public void Test_ClearCart_CartNotFound() {
+            TestStart();
+
+            EfCongoRepository repository = new EfCongoRepository(mockDb.Object);
+
+            CartController controller = new CartController(repository);
+            controller.Request = new HttpRequestMessage();
+            controller.Configuration = new HttpConfiguration();
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Client.Models.PostResponseBody response = serializer.Deserialize<Client.Models.PostResponseBody>(controller.Clear(4).Content.ReadAsStringAsync().Result);
+
+            Assert.False(response.Success);
+            Assert.Equal("Cart with ID 4 was not found.", response.Message);
         }
     }
 }

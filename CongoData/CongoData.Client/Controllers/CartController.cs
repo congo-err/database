@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace CongoData.Client.Controllers
 {
@@ -67,11 +68,33 @@ namespace CongoData.Client.Controllers
         /// <summary>
         /// Remove a Product from a Cart.
         /// </summary>
-        /// <param name="cartProduct">The IDs of the Cart and Product.</param>
+        /// <param name="cartID">The ID of the Cart.</param>
+        /// <param name="productID">The ID of the Product.</param>
         /// <returns>OK and success of true if the addition was successful, OK and an erorr message otherwise.</returns>
         [HttpDelete]
-        public HttpResponseMessage Delete([FromBody] Models.CartProduct cartProduct) {
-            string errorMessage = repository.RemoveProductFromCart(cartProduct.CartID, cartProduct.ProductID);
+        public HttpResponseMessage Delete(int cartID, int productID) {
+            string errorMessage = repository.RemoveProductFromCart(cartID, productID);
+
+            if (errorMessage == string.Empty) {
+                return Request.CreateResponse(HttpStatusCode.OK, new Models.PostResponseBody {
+                    Success = true
+                }, MediaTypes.Json);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, new Models.PostResponseBody {
+                Success = false,
+                Message = errorMessage
+            }, MediaTypes.Json);
+        }
+
+        /// <summary>
+        /// Remove all Products from a Cart.
+        /// </summary>
+        /// <param name="id">The ID of the Cart.</param>
+        /// <returns></returns>
+        [HttpDelete]
+        public HttpResponseMessage Clear(int id) {
+            string errorMessage = repository.ClearCart(id);
 
             if (errorMessage == string.Empty) {
                 return Request.CreateResponse(HttpStatusCode.OK, new Models.PostResponseBody {
