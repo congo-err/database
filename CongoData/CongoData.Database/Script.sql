@@ -52,6 +52,7 @@ CREATE TABLE [Product].[Product] (
     [Price]       MONEY           NOT NULL,
     [ImagePath]   NVARCHAR (64)   NOT NULL,
     [CategoryID]  INT             NOT NULL,
+    [StripeID]    NVARCHAR (64)   NULL,
     [CreatedDate] DATETIME        NOT NULL,
     [UpdatedDate] DATETIME        NOT NULL,
     [Active]      BIT             NOT NULL,

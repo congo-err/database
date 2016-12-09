@@ -99,6 +99,7 @@
           <Property Name="Price" Type="money" Nullable="false" />
           <Property Name="ImagePath" Type="nvarchar" MaxLength="64" Nullable="false" />
           <Property Name="CategoryID" Type="int" Nullable="false" />
+          <Property Name="StripeID" Type="nvarchar" MaxLength="64" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="UpdatedDate" Type="datetime" Nullable="false" />
           <Property Name="Active" Type="bit" Nullable="false" />
@@ -285,7 +286,7 @@
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="UpdatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Active" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Products" Relationship="Self.CartProducts" FromRole="Cart" ToRole="Product" />
+          <NavigationProperty Name="Products" Relationship="CongoDBModel.CartProducts" FromRole="Cart" ToRole="Product" />
         </EntityType>
         <EntityType Name="Order">
           <Key>
@@ -300,7 +301,7 @@
           <Property Name="Active" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Address" Relationship="Self.fk_Order_AddressID" FromRole="Order" ToRole="Address" />
           <NavigationProperty Name="Customer" Relationship="Self.fk_Order_CustomerID" FromRole="Order" ToRole="Customer" />
-          <NavigationProperty Name="Products" Relationship="Self.OrderProducts" FromRole="Order" ToRole="Product" />
+          <NavigationProperty Name="Products" Relationship="CongoDBModel.OrderProducts" FromRole="Order" ToRole="Product" />
         </EntityType>
         <EntityType Name="Account">
           <Key>
@@ -329,23 +330,6 @@
           <NavigationProperty Name="Address" Relationship="Self.fk_Customer_AddressID" FromRole="Customer" ToRole="Address" />
           <NavigationProperty Name="Orders" Relationship="Self.fk_Order_CustomerID" FromRole="Customer" ToRole="Order" />
           <NavigationProperty Name="Account" Relationship="Self.fk_Customer_AccountID" FromRole="Customer" ToRole="Account" />
-        </EntityType>
-        <EntityType Name="Product">
-          <Key>
-            <PropertyRef Name="ProductID" />
-          </Key>
-          <Property Name="ProductID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Price" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
-          <Property Name="ImagePath" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="CategoryID" Type="Int32" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="UpdatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Active" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Carts" Relationship="Self.CartProducts" FromRole="Product" ToRole="Cart" />
-          <NavigationProperty Name="Orders" Relationship="Self.OrderProducts" FromRole="Product" ToRole="Order" />
-          <NavigationProperty Name="Category" Relationship="CongoDBModel.fk_Product_CategoryID" FromRole="Product" ToRole="Category" />
         </EntityType>
         <Association Name="fk_Customer_AddressID">
           <End Role="Address" Type="Self.Address" Multiplicity="1" />
@@ -395,21 +379,12 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="CartProducts">
-          <End Role="Cart" Type="Self.Cart" Multiplicity="*" />
-          <End Role="Product" Type="Self.Product" Multiplicity="*" />
-        </Association>
-        <Association Name="OrderProducts">
-          <End Role="Order" Type="Self.Order" Multiplicity="*" />
-          <End Role="Product" Type="Self.Product" Multiplicity="*" />
-        </Association>
         <EntityContainer Name="CongoDBEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Addresses" EntityType="Self.Address" />
           <EntitySet Name="Carts" EntityType="Self.Cart" />
           <EntitySet Name="Orders" EntityType="Self.Order" />
           <EntitySet Name="Accounts" EntityType="Self.Account" />
           <EntitySet Name="Customers" EntityType="Self.Customer" />
-          <EntitySet Name="Products" EntityType="Self.Product" />
           <AssociationSet Name="fk_Customer_AddressID" Association="Self.fk_Customer_AddressID">
             <End Role="Address" EntitySet="Addresses" />
             <End Role="Customer" EntitySet="Customers" />
@@ -426,17 +401,18 @@
             <End Role="Account" EntitySet="Accounts" />
             <End Role="Customer" EntitySet="Customers" />
           </AssociationSet>
-          <AssociationSet Name="CartProducts" Association="Self.CartProducts">
+          <EntitySet Name="Categories" EntityType="CongoDBModel.Category" />
+          <EntitySet Name="Products" EntityType="CongoDBModel.Product" />
+          <AssociationSet Name="fk_Product_CategoryID" Association="CongoDBModel.fk_Product_CategoryID">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="CartProducts" Association="CongoDBModel.CartProducts">
             <End Role="Cart" EntitySet="Carts" />
             <End Role="Product" EntitySet="Products" />
           </AssociationSet>
-          <AssociationSet Name="OrderProducts" Association="Self.OrderProducts">
+          <AssociationSet Name="OrderProducts" Association="CongoDBModel.OrderProducts">
             <End Role="Order" EntitySet="Orders" />
-            <End Role="Product" EntitySet="Products" />
-          </AssociationSet>
-          <EntitySet Name="Categories" EntityType="CongoDBModel.Category" />
-          <AssociationSet Name="fk_Product_CategoryID" Association="CongoDBModel.fk_Product_CategoryID">
-            <End Role="Category" EntitySet="Categories" />
             <End Role="Product" EntitySet="Products" />
           </AssociationSet>
         </EntityContainer>
@@ -451,6 +427,24 @@
           <Property Name="Active" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Products" Relationship="CongoDBModel.fk_Product_CategoryID" FromRole="Category" ToRole="Product" />
         </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="ProductID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Name="Price" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="ImagePath" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="CategoryID" Type="Int32" Nullable="false" />
+          <Property Name="StripeID" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Category" Relationship="CongoDBModel.fk_Product_CategoryID" FromRole="Product" ToRole="Category" />
+          <NavigationProperty Name="Carts" Relationship="CongoDBModel.CartProducts" FromRole="Product" ToRole="Cart" />
+          <NavigationProperty Name="Orders" Relationship="CongoDBModel.OrderProducts" FromRole="Product" ToRole="Order" />
+        </EntityType>
         <Association Name="fk_Product_CategoryID">
           <End Type="CongoDBModel.Category" Role="Category" Multiplicity="1" />
           <End Type="CongoDBModel.Product" Role="Product" Multiplicity="*" />
@@ -462,6 +456,14 @@
               <PropertyRef Name="CategoryID" />
             </Dependent>
           </ReferentialConstraint>
+        </Association>
+        <Association Name="CartProducts">
+          <End Type="CongoDBModel.Cart" Role="Cart" Multiplicity="*" />
+          <End Type="CongoDBModel.Product" Role="Product" Multiplicity="*" />
+        </Association>
+        <Association Name="OrderProducts">
+          <End Type="CongoDBModel.Order" Role="Order" Multiplicity="*" />
+          <End Type="CongoDBModel.Product" Role="Product" Multiplicity="*" />
         </Association>
       </Schema>
     </edmx:ConceptualModels>
@@ -532,37 +534,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Products">
-            <EntityTypeMapping TypeName="CongoDBModel.Product">
-              <MappingFragment StoreEntitySet="Product">
-                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Price" ColumnName="Price" />
-                <ScalarProperty Name="ImagePath" ColumnName="ImagePath" />
-                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
-                <ScalarProperty Name="Active" ColumnName="Active" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <AssociationSetMapping Name="CartProducts" TypeName="CongoDBModel.CartProducts" StoreEntitySet="CartProducts">
-            <EndProperty Name="Cart">
-              <ScalarProperty Name="CustomerID" ColumnName="CartID" />
-            </EndProperty>
-            <EndProperty Name="Product">
-              <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-            </EndProperty>
-          </AssociationSetMapping>
-          <AssociationSetMapping Name="OrderProducts" TypeName="CongoDBModel.OrderProducts" StoreEntitySet="OrderProducts">
-            <EndProperty Name="Order">
-              <ScalarProperty Name="OrderID" ColumnName="OrderID" />
-            </EndProperty>
-            <EndProperty Name="Product">
-              <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-            </EndProperty>
-          </AssociationSetMapping>
           <EntitySetMapping Name="Categories">
             <EntityTypeMapping TypeName="CongoDBModel.Category">
               <MappingFragment StoreEntitySet="Category">
@@ -574,6 +545,38 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="CongoDBModel.Product">
+              <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="StripeID" ColumnName="StripeID" />
+                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
+                <ScalarProperty Name="ImagePath" ColumnName="ImagePath" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="CartProducts" TypeName="CongoDBModel.CartProducts" StoreEntitySet="CartProducts">
+            <EndProperty Name="Product">
+              <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+            </EndProperty>
+            <EndProperty Name="Cart">
+              <ScalarProperty Name="CustomerID" ColumnName="CartID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="OrderProducts" TypeName="CongoDBModel.OrderProducts" StoreEntitySet="OrderProducts">
+            <EndProperty Name="Product">
+              <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+            </EndProperty>
+            <EndProperty Name="Order">
+              <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

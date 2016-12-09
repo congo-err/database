@@ -1,6 +1,7 @@
 ﻿using CongoData.DataAccess.Abstract;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 
 namespace CongoData.DataAccess.Concrete {
@@ -293,6 +294,26 @@ namespace CongoData.DataAccess.Concrete {
         /// <returns></returns>
         public List<Product> ListProducts() {
             return data.Products.Where(p => p.Active).ToList();
+        }
+
+        /// <summary>
+        /// Updates a Product's StripeID.
+        /// </summary>
+        /// <param name="productId">The ID of the Product.</param>
+        /// <param name="stripeId">The ID of the SKU on Stripe.</param>
+        /// <returns>True if the change was successful, false otherwise.</returns>
+        public bool SetProductStripeID(int productId, string stripeId) {
+            Product product = GetProduct(productId);
+
+            if (product == null) {
+                return false;
+            }
+
+            DbEntityEntry<Product> productEntry = data.Entry(product);
+            product.StripeID = stripeId;
+            productEntry.State = System.Data.Entity.EntityState.Modified;
+
+            return data.SaveChanges() > 0;
         }
     }
 }
