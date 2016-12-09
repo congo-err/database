@@ -1,21 +1,36 @@
 # Congo
+## Welcome to the Congo
 
-Congo is a online shopping web application for everyday items.
-The site allows customers to login to save their address, browse items, and shop freely.
-Customers are able to finalize their purchase using Stripe.
+This is an AngularJS application with ASP.NET services driving the back-end. Congo is an online shopping
+experience with two types of users, admins and customers. Admin users can manage the site's products being sold, and view
+orders histories. The customer users are able to browse categories and products, add products to their cart,
+browse their past orders, and finish their shopping experience by paying with their credit card.
 
-# Members
-
+## Members
 + Ryan McKennon
 + Erik Polsean
 + Richard Voelker
 
-# Technologies
-
-+ SQL
+## Technologies
++ AWS RDS
++ SQL Server
++ RSA Encryption
 + Entity Framework
 + C#
-+ ASP.NET Web API
++ Ninject
++ xUnit
++ AWS EC2
++ Web API
++ CORS
++ Data Annotations
++ Stripe
++ Jenkins
++ Groovy
 + HTML
 + CSS
++ BootStrap
++ JavaScript
 + AngularJS
++ Pivotal Tracker
++ GitHub
++ Slack
