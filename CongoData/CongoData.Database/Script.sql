@@ -52,6 +52,7 @@ CREATE TABLE [Product].[Product] (
     [Price]       MONEY           NOT NULL,
     [ImagePath]   NVARCHAR (64)   NOT NULL,
     [CategoryID]  INT             NOT NULL,
+    [StripeID]    NVARCHAR (64)   NULL,
     [CreatedDate] DATETIME        NOT NULL,
     [UpdatedDate] DATETIME        NOT NULL,
     [Active]      BIT             NOT NULL,
@@ -113,6 +114,10 @@ ALTER TABLE [People].[Customer]
 GO
 ALTER TABLE [People].[Customer]
     ADD CONSTRAINT [fk_Customer_AddressID] FOREIGN KEY ([AddressID]) REFERENCES [Order].[Address] ([AddressID]);
+
+GO
+ALTER TABLE [Product].[Product]
+    ADD CONSTRAINT [fk_Product_CategoryID] FOREIGN KEY ([CategoryID]) REFERENCES [Product].[Category] ([CategoryID]);
 
 GO
 ALTER TABLE [Order].[Order]
